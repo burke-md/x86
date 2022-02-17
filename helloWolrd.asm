@@ -1,17 +1,19 @@
-.global _start             // Provide program starting address to linker
-.align 2
+section .text
+        global _start
+_start:                         ;entry point
+        mov edx, len            ;length
+        mov ecx, msg            ;message
+        mov ebx, 1              ;file descriptor
+        mov eax, 4              ;system call number (sys_write)
+        int 0x80                
+        mov eax, 1              ;system call number (sys_exit)
+        int 0x80                
 
+section .data
 
+msg db 'Hell0, world',0xa       ;string
+len equ $ - msg                 ;length of string asssigned to 'msg'
 
-_start: mov X0, #1     // 1 = StdOut
-        adr X1, helloworld // string to print
-        mov X2, #13     // length of our string
-        mov X16, #4     // MacOS write system call
-        svc 0     // Call linux to output the string
-
-
-        mov     X0, #0      // Use 0 return code
-        mov     X16, #1     // Service command code 1 terminates this program
-        svc     0           // Call MacOS to terminate the program
-
-helloworld:      .ascii  "Hello World!\n"
+;mov                    -> move
+;eax, ebx, edx, ecx     -> general purpose registers
+;int 0x80               -> interupt & call kernel, see above for call number
